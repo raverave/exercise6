@@ -1,10 +1,14 @@
-import Dashboard from "./pages/Dashboard";
-//import Products from "./pages/Products";
+import './App.css';
+import Dashboard from './pages/Dashboard';
+import Users from './pages/Users';
 
-function App(){
+function App() {
   return (
-    <Dashboard />
-  )
+    <div>
+      <Dashboard/>
+      <Users/>
+    </div>
+  );
 }
 
 export default App;

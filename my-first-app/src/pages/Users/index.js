@@ -1,36 +1,60 @@
-import React, { useState, useEffect }  from 'react';
-const Users = () => {
-const [error, setError] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(false);
-    const [users, setUsers] = useState([]);
-    useEffect(() => {
-        fetch("https://jsonplaceholder.typicode.com/users/")
-            .then(res => res.json())
-            .then(
-                (data) => {
-                    setIsLoaded(true);
-                    setUsers(data);
-                },
-                (error) => {
-                    setIsLoaded(true);
-                    setError(error);
-                }
-            )
-      }, [])
-if (error) {
-        return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
-        return <div>Loading...</div>;
-    } else {
-        return (
-            <ul>
-                {users.map(user => (
-                <li key={user.id}>
-                    {user.name} 
-                </li>
-                ))}
-            </ul>
-        );
+import React, { Component } from "react";
+
+
+class Users extends Component {
+
+    constructor(props) {
+      super(props);
+      this.state = {
+        items: []
+      };
     }
-}
-export default Users;
+  
+    componentDidMount() {
+        fetch("https://reqres.in/api/users?page=2")
+          .then(res => res.json())
+          .then(parsedJSON => parsedJSON.data.map(item => (
+            {
+              id: `${item.id}`,
+              email: `${item.email}`,
+              firstName: `${item.first_name}`,
+              lastName: `${item.last_name}`,
+              image: `${item.avatar}`,
+  
+            }
+          )))
+          .then(items => this.setState({
+            items,
+            isLoaded: false
+          }))
+          .catch(error => console.log('parsing failed', error))
+      }
+  
+      render() {
+        const {items } = this.state;
+          return (
+            <div className="boxWhite">
+              <h2>List Users</h2>
+              {
+                items.length > 0 ? items.map(item => {
+                const {id, firstName, lastName,  image} = item;
+                 return (
+  
+                 <div key={id} className="bgCircle">
+                 <center><img src={image} alt={firstName} className="circle"/> </center><br />
+                 <div className="ctr">
+                    {firstName} {lastName}<br />
+                    
+                  </div>
+  
+                </div>
+                );
+              }) : null
+            }
+            </div>
+          );
+  
+      }
+    }
+  
+  export default Users;
